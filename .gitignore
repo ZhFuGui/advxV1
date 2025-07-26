@@ -1,0 +1,6 @@
+# 忽略 npm 依赖目录
+src/node_modules/
+
+# 可选：同时忽略 npm 相关的锁文件（根据项目需求选择）
+yarn.lock
+pnpm-lock.yaml

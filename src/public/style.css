@@ -1,0 +1,164 @@
+:root {
+  --background-color: #fdfdff;
+  --final-background: #030303;
+}
+
+/* --- 全局和初始布局 --- */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--background-color);
+  margin: 0;
+  overflow: hidden;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#initial-stage,
+#final-stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#final-stage {
+  visibility: hidden;
+  opacity: 0;
+  background-color: var(--final-background);
+}
+
+#waves-background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; 
+}
+
+
+
+/* 按钮容器 */
+#button-wrapper {
+  position: relative;     /* 成为内部绝对定位元素的参照物 */
+  display: inline-block;  /* 让容器大小自适应按钮内容 */
+  padding: 15px;          /* 为SVG边框留出空间 */
+  margin-top: 20px;
+}
+
+/* SVG 边框 */
+#button-border-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;           
+  pointer-events: none; 
+}
+
+
+@keyframes draw-border {
+  0% {
+    stroke-dashoffset: var(--path-length);
+  }
+  80% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+#button-border-path {
+  fill: none;
+  stroke: #f48129cc;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  animation: draw-border 4s ease-in-out infinite;
+}
+
+#action-button {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  position: relative;
+  z-index: 1;
+  color: rgb(0, 0, 0);
+  padding: 15px 40px;
+  font-size: 1.4em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.3s;
+}
+#action-button:hover {
+  transform: translateY(-3px);
+  color: #9884d1;
+}
+#action-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+
+#transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  opacity: 0;
+  z-index: 999;
+  pointer-events: none;
+  transition: opacity 3s ease-in-out;
+}
+
+#magic-text-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  cursor: pointer;
+}
+
+
+body.in-transition #transition-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.final-state #initial-stage {
+  display: none; 
+}
+body.final-state #final-stage {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 3s ease-in-out; 
+}
+
+#trigger-zone {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 200px;
+  z-index: 10;
+
+  /* 给一个视觉暗示，这里可以交互 */
+  cursor: pointer;
+
+  /* 调试时可以取消注释下面这行，以看到触发区的范围 */
+  /* border: 1px dashed rgba(255, 255, 255, 0.3); */
+}

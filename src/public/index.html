@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>领取补贴</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <div id="initial-stage">
+      <!-- 动态波浪背景 -->
+      <div id="waves-background-container">
+        <canvas id="waves-canvas"></canvas>
+      </div>
+
+      <!-- “我是按钮” -->
+      <div id="button-wrapper">
+        <svg
+          id="button-border-svg"
+          viewBox="0 0 300 100"
+          preserveAspectRatio="none"
+        >
+          <path
+            id="button-border-path"
+            d="M 290 40 C 320 70, 250 115, 150 95 C 50 80, -20 60, 10 30 C 40 0, 100 0, 150 20 C 200 40, 250 20, 270 45"
+          />
+        </svg>
+        <button id="action-button">我是按钮</button>
+      </div>
+    </div>
+
+    <!-- “我要补贴” -->
+    <div id="final-stage">
+      <div id="magic-text-container">
+        <!-- 粒子文本动画 -->
+      </div>
+      <!-- 粒子转文字触发区域 -->
+      <div id="trigger-zone"></div>
+    </div>
+
+    <!-- 过渡遮罩 (初始隐藏) -->
+    <div id="transition-overlay"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
