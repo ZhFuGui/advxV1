@@ -155,10 +155,13 @@ body.final-state #final-stage {
   width: 400px;
   height: 200px;
   z-index: 10;
-
-  /* 给一个视觉暗示，这里可以交互 */
   cursor: pointer;
+}
 
-  /* 调试时可以取消注释下面这行，以看到触发区的范围 */
-  /* border: 1px dashed rgba(255, 255, 255, 0.3); */
+
+body.is-leaving #transition-overlay {
+  background-color: #ffeae2;  
+  opacity: 1;                
+  pointer-events: auto;                
+  transition: opacity 2.9s ease-in-out; 
 }

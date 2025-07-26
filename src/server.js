@@ -1,12 +1,17 @@
 const express = require('express');
 const path = require('path');
-
+const routes_get = require('./service/routes_get');
 const app = express();
 const PORT = process.env.PORT || 31415;
 
-app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(routes_get);
 
 app.listen(PORT, () => {
-    console.log(`✅ 服务器成功启动！`);
-    console.log(`🚀 请在浏览器中打开 http://localhost:${PORT}`);
+    console.log(`✅`);
+    console.log(`🚀 http://localhost:${PORT}/step1/index.html`);
 });
+
+
+
+

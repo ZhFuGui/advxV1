@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>签到成功了！</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="container">
+      <svg id="filters" style="display: none">
+        <defs>
+          <filter id="threshold">
+            <feColorMatrix
+              in="SourceGraphic"
+              type="matrix"
+              values="1 0 0 0 0
+                                                                            0 1 0 0 0
+                                                                            0 0 1 0 0
+                                                                            0 0 0 255 -140"
+            />
+          </filter>
+        </defs>
+      </svg>
+
+      <div class="text-wrapper">
+        <span id="text1" class="text"></span>
+        <span id="text2" class="text"></span>
+      </div>
+    </div>
+
+    <div id="page-transition-overlay"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

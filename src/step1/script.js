@@ -1,24 +1,131 @@
+const min = 13;
+const max = 18;
+const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+let baction_click_waitime = randomNum * 1000;
+let startTime = 0;
+let endTime = 0;
 /**
- * ======================================================================
  * MagicTextReveal 粒子效果
- * ======================================================================
  */
+function startMouseInactivityTimer(triggerZone, timeoutSeconds = 20) {
+  let timerId;
+  let remainingTime = timeoutSeconds;
+  let countdownInterval;
+
+  function updateCountdown() {
+    document.title = `${remainingTime}s`;
+    console.log(`剩余时间: ${remainingTime}秒`);
+  }
+
+  function startCountdown() {
+
+    clearInterval(countdownInterval);
+
+    updateCountdown();
+
+
+    countdownInterval = setInterval(() => {
+      remainingTime--;
+      updateCountdown();
+
+      if (remainingTime <= 0) {
+        clearInterval(countdownInterval);
+      }
+    }, 1000);
+  }
+
+  // 重置定时器
+  function resetTimer() {
+
+    clearTimeout(timerId);
+    remainingTime = timeoutSeconds;
+    startCountdown();
+
+    timerId = setTimeout(() => {
+      triggerZone.style.pointerEvents = "auto";     // 恢复交互
+      triggerZone.style.cursor = "pointer";         // 恢复手型光标
+      document.title = `ok!`;
+      cleanup();                                    // 清理事件监听
+    }, timeoutSeconds * 1000);
+  }
+
+  // 鼠标移动事件处理函数
+  function handleMouseMove() {
+    console.log("检测到鼠标移动，重置倒计时");
+    resetTimer();
+  }
+
+
+  function cleanup() {
+    document.removeEventListener("mousemove", handleMouseMove);
+    clearTimeout(timerId);
+    clearInterval(countdownInterval);
+  }
+
+  resetTimer();
+
+  // 监听鼠标移动事件
+  document.addEventListener("mousemove", handleMouseMove);
+  return cleanup;
+}
+
+async function performSignIn(timeUsedFloat) {
+  const API_ADD_URL = "http://localhost:31415/api/qiandao/add";
+
+  // 函数内部验证传入的参数
+  if (typeof timeUsedFloat !== "number" || isNaN(timeUsedFloat)) {
+    console.error(
+      "调用 performSignIn 失败：必须提供一个有效的浮点数作为用时。"
+    );
+    return null;
+  }
+
+  try {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // 将 timestamp 和 timesused 一起发送
+      body: JSON.stringify({
+        timestamp: Date.now(),
+        timesused: timeUsedFloat,
+      }),
+    };
+
+    const response = await fetch(API_ADD_URL, requestOptions);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.error || `服务器响应错误，状态码: ${response.status}`
+      );
+    }
+
+    const result = await response.json();
+    console.log(`签到成功！最新总数是: ${result.data}`);
+    return result.data;
+  } catch (error) {
+    console.error("执行签到失败:", error.message);
+    return null;
+  }
+}
+
 class MagicTextReveal {
   constructor(container, options = {}) {
-    // ... (构造函数内容保持不变) ...
     this.container = container;
     this.options = {
-      text: "我要补贴",
+      text: "已成功领取补贴。",
       color: "rgba(255, 72, 0, 0.99)",
       fontSize: 100,
       fontFamily: "STHeiti, 'Microsoft YaHei', sans-serif",
-      fontWeight: 700,
+      fontWeight: 600,
       density: 4,
       ...options,
     };
     this.dpr = window.devicePixelRatio || 1;
     this.particles = [];
-    this.isHovered = false; // 这个状态现在由外部控制
+    this.isHovered = false;
     this.init();
   }
 
@@ -68,12 +175,12 @@ class MagicTextReveal {
         if (imageData.data[(y * this.canvas.width + x) * 4 + 3] > 0) {
           this.particles.push({
             originalX: x,
-            originalY: y, 
-            x: Math.random() * this.canvas.width,         // 初始随机 x
-            y: Math.random() * this.canvas.height,        // 初始随机 y
-            floatingAngle: Math.random() * Math.PI * 2,   // 漂浮角度
-            floatingRadius: Math.random() * 150 + 50,     // 漂浮半径
-            floatingSpeed: Math.random() * 0.3 + 0.1,     // 漂浮速度
+            originalY: y,
+            x: Math.random() * this.canvas.width,           // 初始随机 x
+            y: Math.random() * this.canvas.height,          // 初始随机 y
+            floatingAngle: Math.random() * Math.PI * 2,     // 漂浮角度
+            floatingRadius: Math.random() * 150 + 50,       // 漂浮半径
+            floatingSpeed: Math.random() * 0.3 + 0.1,       // 漂浮速度
             color: color,
           });
         }
@@ -101,7 +208,7 @@ class MagicTextReveal {
       // 使用平滑插值（Interpolation）让粒子移动更自然
       const dx = targetX - p.x;
       const dy = targetY - p.y;
-      p.x += dx * 0.04; // 0.05 是缓动系数，越小越平滑
+      p.x += dx * 0.04;
       p.y += dy * 0.04;
 
       this.ctx.fillStyle = p.color;
@@ -113,10 +220,7 @@ class MagicTextReveal {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // ==========================================================
   // 动态波浪背景
-  // ==========================================================
-
   class Grad {
     constructor(x, y, z) {
       this.x = x;
@@ -395,12 +499,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const actionButton = document.getElementById("action-button");
+  const triggerZone = document.getElementById("trigger-zone");
   let magicTextInstance = null;
 
   actionButton.addEventListener("click", () => {
     actionButton.disabled = true;
     document.body.classList.add("in-transition");
-
+    startTime = performance.now();
+    triggerZone.style.pointerEvents = "none";
+    triggerZone.style.cursor = "default";
     setTimeout(() => {
       document.body.classList.remove("in-transition");
       document.body.classList.add("final-state");
@@ -411,11 +518,9 @@ document.addEventListener("DOMContentLoaded", () => {
           fontSize: window.innerWidth < 768 ? 60 : 100,
         });
 
-        // 将事件监听器绑定到指定的触发区
         const triggerZone = document.getElementById("trigger-zone");
         if (triggerZone) {
           triggerZone.addEventListener("mouseenter", () => {
-            // 更新实例的 isHovered 状态
             if (magicTextInstance) magicTextInstance.isHovered = true;
           });
           triggerZone.addEventListener("mouseleave", () => {
@@ -424,14 +529,30 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     }, 2000);
+    startMouseInactivityTimer(triggerZone, baction_click_waitime / 1000);
   });
 
+  if (triggerZone) {
+    triggerZone.addEventListener(
+      "click",
+      async () => {
+        triggerZone.disabled = true; // 防止重复点击
+        endTime = performance.now();
+        const durationSeconds = (endTime - startTime) / 1000;
+        const preciseDuration = parseFloat(durationSeconds.toFixed(3));
+        const newCount = await performSignIn(preciseDuration);
+        if (newCount == null) {
+          alert("签到失败，请稍后重试。详情请查看控制台。");
+        }
+        document.body.classList.add("is-leaving");
+        setTimeout(() => {
+          window.location.href = "/step2/index.html";
+        }, 3000);
+      },
+      { once: true }
+    );
+  }
 
-  const trigger_zone = document.getElementById("trigger-zone");
-
-  trigger_zone.addEventListener("click", () => {
-    alert("p");
-  });
   // --- 启动初始动画 ---
   initializeWaves();
   initializeHandDrawnButton();

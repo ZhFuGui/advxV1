@@ -1,0 +1,86 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffeae2;
+    color: #000000;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow: hidden;
+}
+
+#container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+
+.text-wrapper {
+    position: relative;
+    filter: url(#threshold) blur(0.8px);    /* 应用滤镜并添加轻微模糊以平滑边缘 */
+    width: 100%;
+    height: 150px;                          /* 给一个固定的高度，防止文字跳动 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: 7rem;
+    font-weight: bold;
+    user-select: none; 
+    line-height: 1.2;
+}
+
+.hex-number {
+    color: #ff5100; /* 小火色 */
+    font-family: 'Courier New', Courier, monospace; 
+}
+
+.time-used {
+    color: #4fb36d; /* 绿色 */
+    font-weight: normal;
+    font-size: 7rem;
+}
+
+
+.rank {
+    color: #ff9717; /* 暗橙色 */
+    font-weight: normal;
+    font-size: 7rem; 
+}
+
+
+@media (min-width: 768px) {
+    .text {
+        font-size: 7rem;
+    }
+}
+
+#page-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    
+    background-color: #ffeae2;
+    
+    opacity: 0;
+    pointer-events: none;
+
+    z-index: 9999;
+    transition: opacity 3.0s ease-in-out;
+}
+
+#page-transition-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;   /* 变为可见后，可以响应鼠标事件 */
+}
