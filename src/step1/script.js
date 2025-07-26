@@ -504,6 +504,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   actionButton.addEventListener("click", () => {
     actionButton.disabled = true;
+    alert("这里什么都没有，我只是一个按钮。");
     document.body.classList.add("in-transition");
     startTime = performance.now();
     triggerZone.style.pointerEvents = "none";
