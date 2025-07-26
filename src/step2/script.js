@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
       type: "dynamic_rank",
     },
     {
-      text: "你是第<span class='hex-number'>{hex}</span>位签到游客！",
+      text: "您是第<span class='hex-number'>{hex}</span>位签到的旅人。",
       duration: 3000,
       type: "dynamic_hex",
     },
