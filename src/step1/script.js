@@ -4,9 +4,35 @@ const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
 let baction_click_waitime = randomNum * 1000;
 let startTime = 0;
 let endTime = 0;
+
+
+function showMessage(message, type = 'info', duration = 3000) {
+  // 创建消息弹窗的 DOM 结构
+  const messageEl = document.createElement('div');
+  messageEl.className = `el-message el-message--${type}`;
+
+  const contentEl = document.createElement('p');
+  contentEl.className = 'el-message__content';
+  contentEl.textContent = message;
+
+  messageEl.appendChild(contentEl);
+  document.body.appendChild(messageEl);
+
+  // 设置定时器，在 duration 之后开始关闭动画
+  setTimeout(() => {
+    messageEl.classList.add('is-leaving');
+    
+    setTimeout(() => {
+      if (messageEl.parentNode) {
+        messageEl.parentNode.removeChild(messageEl);
+      }
+    }, 300);
+  }, duration);
+}
 /**
  * MagicTextReveal 粒子效果
  */
+
 function startMouseInactivityTimer(triggerZone, timeoutSeconds = 20) {
   let timerId;
   let remainingTime = timeoutSeconds;
@@ -504,12 +530,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   actionButton.addEventListener("click", () => {
     actionButton.disabled = true;
-    alert("这里什么都没有，我只是一个按钮。");
     document.body.classList.add("in-transition");
     startTime = performance.now();
     triggerZone.style.pointerEvents = "none";
     triggerZone.style.cursor = "default";
     setTimeout(() => {
+      showMessage("正在收集宇宙能量，请勿乱动！", 'cosmic', 3000);
       document.body.classList.remove("in-transition");
       document.body.classList.add("final-state");
 

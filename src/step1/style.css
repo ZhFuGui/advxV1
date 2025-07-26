@@ -165,3 +165,68 @@ body.is-leaving #transition-overlay {
   pointer-events: auto;                
   transition: opacity 2.9s ease-in-out; 
 }
+
+/* --- 新增：Message 弹窗样式 --- */
+.el-message {
+  min-width: 380px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid #000a1e;
+  position: fixed;
+  left: 50%;
+  top: 20px;
+  transform: translateX(-50%);
+  background-color: #000000;
+  padding: 15px 15px 15px 20px;
+  display: flex;
+  align-items: center;
+  z-index: 10000; /* 确保在最顶层 */
+  animation: message-fade-in 0.4s ease-out;
+}
+
+.el-message.is-leaving {
+  animation: message-fade-out 0.3s ease-in forwards;
+}
+
+@keyframes message-fade-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes message-fade-out {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+}
+
+.el-message__content {
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+/* 宇宙能量主题样式 */
+.el-message--cosmic {
+  background-color: #1c1c1e;
+  color: #f48129cc;
+  border: 1px solid #f48129cc;
+  box-shadow: 0 4px 12px rgba(244, 129, 41, 0.2);
+}
+
+/* 使用 ::before 伪元素添加图标 */
+.el-message--cosmic .el-message__content::before {
+  content: '🌌'; /* 银河图标 */
+  margin-right: 10px;
+  font-size: 18px;
+}
